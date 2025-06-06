@@ -1,23 +1,23 @@
 package com.marcosalencar.parkingManagement.dto;
 
-import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 import com.marcosalencar.parkingManagement.entity.Sector;
 
 public record SectorResponseDTO(Character sector,
-                                Double basePrice,
-                                Integer maxCapacity,
-                                LocalTime openHour,
-                                LocalTime closeHour,
-                                Integer durationLimitMinutes) {
+                                Double base_price,
+                                Integer max_capacity,
+                                String open_hour,
+                                String close_hour,
+                                Integer duration_limit_minutes) {
 
     
     public SectorResponseDTO(Sector sector){
         this(sector.getSector(),
              sector.getBasePrice(),
              sector.getMaxCapacity(),
-             sector.getOpenHour(),
-             sector.getCloseHour(),
+             sector.getOpenHour().format(DateTimeFormatter.ofPattern("HH:mm")),
+             sector.getCloseHour().format(DateTimeFormatter.ofPattern("HH:mm")),
              sector.getDurationLimitMinutes());
     }
 }

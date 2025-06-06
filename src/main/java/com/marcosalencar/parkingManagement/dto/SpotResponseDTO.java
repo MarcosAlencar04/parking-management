@@ -7,13 +7,15 @@ import com.marcosalencar.parkingManagement.entity.Spot;
 public record SpotResponseDTO(Long id,
                               Character sector,
                               BigDecimal lat,
-                              BigDecimal lng) {
+                              BigDecimal lng,
+                              Boolean occupied) {
 
     public SpotResponseDTO(Spot spot){
         this(spot.getIdSpot(),
              spot.getSector().getSector(),
              spot.getLat(),
-             spot.getLng());
+             spot.getLng(),
+             spot.getOccupied());
     }
 
 }
