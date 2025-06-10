@@ -3,6 +3,7 @@ package com.marcosalencar.parkingManagement.controller;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +28,7 @@ public class SectorController {
 
             return ResponseEntity.ok(garageInfo);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(Map.of(
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
                 "message", "Erro ao buscar informações da garagem",
                 "error", e.getMessage()));
         }

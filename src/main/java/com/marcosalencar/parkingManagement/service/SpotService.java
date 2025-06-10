@@ -1,5 +1,6 @@
 package com.marcosalencar.parkingManagement.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,4 +18,9 @@ public class SpotService {
     public List<Spot> getAllSpots(){
         return spotRepository.findAll();
     }
+
+    public Spot getSpotByLatAndLng(BigDecimal lat, BigDecimal lng) {
+        return spotRepository.findByLatAndLng(lat, lng);
+    }
+
 }

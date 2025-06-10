@@ -15,7 +15,7 @@ public record SpotResponseDTO(Long id,
              spot.getSector().getSector(),
              spot.getLat(),
              spot.getLng(),
-             spot.getOccupied());
+             spot.isOccupied());
     }
 
 }

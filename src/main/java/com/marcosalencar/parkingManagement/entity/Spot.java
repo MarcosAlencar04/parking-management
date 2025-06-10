@@ -40,5 +40,5 @@ public class Spot {
     @Column(name = "lng", precision = 10, scale = 6)
     private BigDecimal lng;
     
-    private Boolean occupied;
+    private boolean occupied;
 }
