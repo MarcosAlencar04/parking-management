@@ -17,6 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.marcosalencar.parkingManagement.dto.PlateStatusResponseDTO;
 import com.marcosalencar.parkingManagement.dto.SpotOccupancyRequestDTO;
 import com.marcosalencar.parkingManagement.entity.Sector;
 import com.marcosalencar.parkingManagement.entity.Spot;
@@ -53,11 +54,11 @@ public class SpotOccupancyServiceTest {
     void calcFinalPrice() {
         double pricePerHour = 10.0;
         LocalDateTime entryTime = LocalDateTime.of(2025, 1, 1, 12, 0, 0, 0);
-        LocalDateTime exitTime = LocalDateTime.of(2025, 1, 1, 14, 0, 0, 0);  // 2 horas de permanência
+        LocalDateTime exitTime = LocalDateTime.of(2025, 1, 1, 14, 30, 0, 0);  // 2 horas de permanência
 
-        double expectedPrice = 20.0;
+        double expectedPrice = 25.0;
 
-        double actualPrice = spotOccupancyService.calcFinalPrice(pricePerHour, entryTime, exitTime);
+        double actualPrice = spotOccupancyService.calcCurrentPrice(pricePerHour, entryTime, exitTime);
         assertEquals(expectedPrice, actualPrice, 0.01);
     }
 
@@ -180,7 +181,46 @@ public class SpotOccupancyServiceTest {
         String response = spotOccupancyService.fluxControl(validExitDTO);
         assertEquals("Baixa dada do veículo no estacionamento", response);
     }
+ 
+    @Test
+    void testPlateStatusSuccess() throws Exception {
+        String licensePlate = "ZUL0001";
+
+        SpotOccupancy spotOccupancy = new SpotOccupancy();
+        spotOccupancy.setLicensePlate(licensePlate);
+        spotOccupancy.setEntryTime(LocalDateTime.of(2025, 1, 1, 12, 0, 0, 0));
+        spotOccupancy.setExitTime(null);
+        spotOccupancy.setPricePerHour(10.0);
+        
+        Spot spot = new Spot();
+        Sector sector = new Sector();
+        sector.setSector('A');
+        sector.setMaxCapacity(10);
+        sector.setCurrentOccupancy(5);
     
-    
-    
+        spot.setSector(sector);
+        spotOccupancy.setSpot(spot);
+
+        when(spotOccupancyRespository.findByLicensePlateAndExitTimeNull(licensePlate))
+                .thenReturn(Optional.of(spotOccupancy));
+
+        double expectedPrice = spotOccupancyService.calcCurrentPrice(10.0, LocalDateTime.of(2025, 1, 1, 12, 0, 0, 0), LocalDateTime.now());
+
+        PlateStatusResponseDTO response = spotOccupancyService.plateStatus(licensePlate);
+
+        assertEquals(licensePlate, response.license_plate());
+        assertEquals(expectedPrice, response.price_until_now(), 0.01);
+    }
+
+    @Test
+    void testPlateStatusCarNotFound() {
+        String licensePlate = "ZUL0001";
+
+        when(spotOccupancyRespository.findByLicensePlateAndExitTimeNull(licensePlate))
+                .thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(Exception.class, () -> spotOccupancyService.plateStatus(licensePlate));
+        assertEquals("Carro com a placa ZUL0001 não se encontra estacionado no momento", exception.getMessage());
+    }
+
 }

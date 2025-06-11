@@ -1,12 +1,17 @@
 package com.marcosalencar.parkingManagement.service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.marcosalencar.parkingManagement.dto.PlateStatusResponseDTO;
 import com.marcosalencar.parkingManagement.dto.SpotOccupancyRequestDTO;
 import com.marcosalencar.parkingManagement.entity.Sector;
 import com.marcosalencar.parkingManagement.entity.Spot;
@@ -82,7 +87,7 @@ public class SpotOccupancyService {
         Sector sector = spot.getSector();
 
         lastOccupancy.setExitTime(dto.exit_time());
-        double finalPrice = calcFinalPrice(lastOccupancy.getPricePerHour(), lastOccupancy.getEntryTime(), lastOccupancy.getExitTime());
+        double finalPrice = calcCurrentPrice(lastOccupancy.getPricePerHour(), lastOccupancy.getEntryTime(), lastOccupancy.getExitTime());
         lastOccupancy.setFinalPrice(finalPrice);
         sector.setCurrentOccupancy(sector.getCurrentOccupancy()-1);
         spot.setSector(sector);
@@ -92,11 +97,13 @@ public class SpotOccupancyService {
         return "Baixa dada do veículo no estacionamento";
     }
 
-    public double calcFinalPrice(Double pricePerHour,LocalDateTime entryTime, LocalDateTime exitTime) {
-        Duration duration = Duration.between(entryTime, exitTime);
+    public double calcCurrentPrice(Double pricePerHour,LocalDateTime entryTime, LocalDateTime referenceTime) {
+        Duration duration = Duration.between(entryTime, referenceTime);
         long seconds = duration.getSeconds();
-        long decimalHour = seconds/3600;
-        return decimalHour * pricePerHour;
+        double decimalHour = (double) seconds/3600;
+        BigDecimal roundedValue = BigDecimal.valueOf(decimalHour * pricePerHour)
+                                            .setScale(2, RoundingMode.HALF_UP);
+        return roundedValue.doubleValue();
     }
 
     public String fluxControl(SpotOccupancyRequestDTO dto) throws Exception {
@@ -110,6 +117,27 @@ public class SpotOccupancyService {
         } else{
             throw new Exception("Tipo de evento inválido");
         }
+    }
+
+    public LocalDateTime calcTimeParked(LocalDateTime entryTime) {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime startOfDay = LocalDateTime.of(now.toLocalDate(), LocalTime.MIDNIGHT);
+        Duration duration = Duration.between(entryTime, now);
+        LocalDateTime result = startOfDay.plus(duration);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SS");
+        String formattedTime = result.format(formatter);
+
+        return LocalDateTime.parse(formattedTime, formatter);
+    }
+
+    public PlateStatusResponseDTO plateStatus(String licensePlate) throws Exception{
+        SpotOccupancy spotOccupancy = spotOccupancyRespository.findByLicensePlateAndExitTimeNull(licensePlate).orElseThrow(
+                                                               () -> new Exception("Carro com a placa " + licensePlate + " não se encontra estacionado no momento"));
+
+        Double priceUntilNow = calcCurrentPrice(spotOccupancy.getPricePerHour(), spotOccupancy.getEntryTime(), LocalDateTime.now());
+        LocalDateTime timeParked = calcTimeParked(spotOccupancy.getEntryTime());
+        PlateStatusResponseDTO response = new PlateStatusResponseDTO(spotOccupancy, priceUntilNow, timeParked);
+        return response;
     }
 
 }

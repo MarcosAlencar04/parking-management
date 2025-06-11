@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.marcosalencar.parkingManagement.dto.PlateStatusRequestDTO;
+import com.marcosalencar.parkingManagement.dto.PlateStatusResponseDTO;
 import com.marcosalencar.parkingManagement.dto.SpotOccupancyRequestDTO;
 import com.marcosalencar.parkingManagement.service.SpotOccupancyService;
 
@@ -35,4 +37,18 @@ public class SpotOccupancyController {
             ));
         }
     }
+
+    @PostMapping("/plate-status")
+    public ResponseEntity<?> plateStatus(@RequestBody PlateStatusRequestDTO dto) {
+        try {
+            PlateStatusResponseDTO response = spotOccupancyService.plateStatus(dto.license_plate());
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
+                "message", "Erro ao buscar informações da placa",
+                "error", e.getMessage()
+            ));
+        }
+    }
+    
 }
