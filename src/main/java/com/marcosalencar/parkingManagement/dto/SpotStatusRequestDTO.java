@@ -1,5 +1,8 @@
 package com.marcosalencar.parkingManagement.dto;
 
-public record SpotStatusRequestDTO() {
+import java.math.BigDecimal;
+
+public record SpotStatusRequestDTO(BigDecimal lat, 
+                                   BigDecimal lng) {
 
 }

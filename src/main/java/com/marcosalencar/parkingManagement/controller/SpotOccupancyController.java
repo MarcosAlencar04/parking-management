@@ -15,8 +15,6 @@ import com.marcosalencar.parkingManagement.dto.PlateStatusResponseDTO;
 import com.marcosalencar.parkingManagement.dto.SpotOccupancyRequestDTO;
 import com.marcosalencar.parkingManagement.service.SpotOccupancyService;
 
-
-
 @RestController
 @CrossOrigin(origins = "*")
 public class SpotOccupancyController {

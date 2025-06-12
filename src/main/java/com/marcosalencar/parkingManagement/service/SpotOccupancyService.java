@@ -26,13 +26,17 @@ public class SpotOccupancyService {
     @Autowired
     private SpotOccupancyRepository spotOccupancyRespository;
 
-    @Autowired
+    @Autowired 
     private SpotService spotService;
 
     @Autowired
     private SectorService sectorService;
 
     private enum EventType {ENTRY, PARKED, EXIT};
+
+    public SpotOccupancy getBySpot(Long idSpot){
+        return spotOccupancyRespository.findBySpot_IdSpotAndExitTimeNull(idSpot);
+    }
 
     private String manageEntry(SpotOccupancyRequestDTO dto) throws Exception{
         Optional<SpotOccupancy> plateParked = spotOccupancyRespository.findByLicensePlateAndExitTimeNull(dto.license_plate());
@@ -124,7 +128,7 @@ public class SpotOccupancyService {
         LocalDateTime startOfDay = LocalDateTime.of(now.toLocalDate(), LocalTime.MIDNIGHT);
         Duration duration = Duration.between(entryTime, now);
         LocalDateTime result = startOfDay.plus(duration);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SS");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
         String formattedTime = result.format(formatter);
 
         return LocalDateTime.parse(formattedTime, formatter);

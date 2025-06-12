@@ -54,7 +54,7 @@ public class SpotOccupancyServiceTest {
     void calcFinalPrice() {
         double pricePerHour = 10.0;
         LocalDateTime entryTime = LocalDateTime.of(2025, 1, 1, 12, 0, 0, 0);
-        LocalDateTime exitTime = LocalDateTime.of(2025, 1, 1, 14, 30, 0, 0);  // 2 horas de permanência
+        LocalDateTime exitTime = LocalDateTime.of(2025, 1, 1, 14, 30, 0, 0);
 
         double expectedPrice = 25.0;
 
