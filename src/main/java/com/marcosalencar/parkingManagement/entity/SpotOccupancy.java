@@ -1,6 +1,9 @@
 package com.marcosalencar.parkingManagement.entity;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -38,4 +41,15 @@ public class SpotOccupancy {
     private Double pricePerHour;
     private LocalDateTime exitTime;
     private Double finalPrice;
+
+    public LocalDateTime getTimeParked(){
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime startOfDay = LocalDateTime.of(now.toLocalDate(), LocalTime.MIDNIGHT);
+        Duration duration = Duration.between(entryTime, now);
+        LocalDateTime result = startOfDay.plus(duration);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+        String formattedTime = result.format(formatter);
+
+        return LocalDateTime.parse(formattedTime, formatter);
+    }
 }

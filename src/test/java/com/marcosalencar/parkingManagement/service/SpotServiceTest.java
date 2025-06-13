@@ -32,6 +32,9 @@ public class SpotServiceTest {
     @Mock
     private SpotRepository spotRepository;
 
+    @Mock
+    private PricingService pricingService;
+
     private Spot spot;
 
     @BeforeEach
@@ -51,7 +54,7 @@ public class SpotServiceTest {
         when(spotRepository.findByLatAndLng(any(BigDecimal.class), any(BigDecimal.class))).thenReturn(spot);
         when(spotOccupancyService.getBySpot(spot.getIdSpot())).thenReturn(spotOccupancy);
 
-        lenient().when(spotOccupancyService.calcCurrentPrice(any(Double.class), any(LocalDateTime.class), any(LocalDateTime.class)))
+        lenient().when(pricingService.calcCurrentPrice(any(Double.class), any(LocalDateTime.class), any(LocalDateTime.class)))
                  .thenReturn(20.0);
 
         SpotStatusResponseDTO response = spotService.spotStatus(BigDecimal.valueOf(-23.561684), BigDecimal.valueOf(-46.655981));
@@ -73,4 +76,5 @@ public class SpotServiceTest {
         assertEquals("", response.license_plate());
         assertEquals(0, response.price_until_now(), 0.01);
     }
+
 }

@@ -32,4 +32,23 @@ public class Sector {
     private LocalTime closeHour;
     private Integer  durationLimitMinutes;
     private Integer currentOccupancy;
+
+    public boolean isOpen(){
+        LocalTime now = LocalTime.now();
+        
+        if(openHour.isBefore(closeHour)){
+            return !now.isBefore(openHour) && now.isBefore(closeHour);
+        }
+
+        return !now.isBefore(openHour) || now.isBefore((closeHour));
+    }
+
+    public boolean isFull() {
+        double occupancy = (double) currentOccupancy/maxCapacity;
+        
+        if(occupancy > 1)
+            throw new RuntimeException("Ocupação do estacionamento fora da faixa comum");
+
+        return occupancy == 1 ? true : false;
+    }
 }

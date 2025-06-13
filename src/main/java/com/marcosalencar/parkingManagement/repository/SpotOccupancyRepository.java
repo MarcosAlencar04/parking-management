@@ -8,7 +8,8 @@ import com.marcosalencar.parkingManagement.entity.SpotOccupancy;
 
 
 public interface SpotOccupancyRepository extends JpaRepository<SpotOccupancy, Long>{
-    Optional<SpotOccupancy> findTopByLicensePlateOrderByIdOccupancyDesc(String licensePlate);
+    
+    Optional<SpotOccupancy> findTopByLicensePlateAndExitTimeIsNullOrderByIdOccupancyDesc(String licensePlate);
     Optional<SpotOccupancy> findByLicensePlateAndExitTimeNull(String licensePlate);
     SpotOccupancy findBySpot_IdSpotAndExitTimeNull(Long id);
 }

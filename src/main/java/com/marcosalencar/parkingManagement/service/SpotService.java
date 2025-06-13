@@ -14,6 +14,8 @@ import com.marcosalencar.parkingManagement.entity.Spot;
 import com.marcosalencar.parkingManagement.entity.SpotOccupancy;
 import com.marcosalencar.parkingManagement.repository.SpotRepository;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 public class SpotService {
 
@@ -23,6 +25,9 @@ public class SpotService {
     @Autowired
     @Lazy
     private SpotOccupancyService spotOccupancyService;
+    
+    @Autowired
+    private PricingService pricingService;
 
     public List<Spot> getAllSpots(){
         return spotRepository.findAll();
@@ -34,12 +39,14 @@ public class SpotService {
 
     public SpotStatusResponseDTO spotStatus(BigDecimal lat, BigDecimal lng){
         Spot spot = getSpotByLatAndLng(lat, lng);
+        if(spot == null)
+            throw new EntityNotFoundException("Nenhuma vaga cadastrada com as coordenadas: lat = " + lat + " lng = " + lng);
 
         if(spot.isOccupied()){
             SpotOccupancy occupancy = spotOccupancyService.getBySpot(spot.getIdSpot());
             LocalDateTime entryTime = occupancy.getEntryTime();
-            double priceUntilNow = spotOccupancyService.calcCurrentPrice(occupancy.getPricePerHour(), entryTime, LocalDateTime.now());
-            LocalDateTime timeParked = spotOccupancyService.calcTimeParked(entryTime);
+            double priceUntilNow = pricingService.calcCurrentPrice(occupancy.getPricePerHour(), entryTime, LocalDateTime.now());
+            LocalDateTime timeParked = occupancy.getTimeParked();
             SpotStatusResponseDTO response = new SpotStatusResponseDTO(spot.isOccupied(), 
                                                                        occupancy.getLicensePlate(),
                                                                        priceUntilNow, 
