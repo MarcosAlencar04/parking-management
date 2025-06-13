@@ -18,7 +18,7 @@ public class SpotController {
     @Autowired
     private SpotService spotService;
 
-    @PostMapping("spot-status")
+    @PostMapping("/spot-status")
     public SpotStatusResponseDTO spotStatus(@RequestBody SpotStatusRequestDTO dto) {
         SpotStatusResponseDTO response = spotService.spotStatus(dto.lat(), dto.lng());
         return response;

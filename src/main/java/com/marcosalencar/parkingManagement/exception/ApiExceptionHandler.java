@@ -32,6 +32,7 @@ public class ApiExceptionHandler {
     public ResponseEntity<Map<String,Object>> handleGeneric(Exception ex, HttpServletRequest req) {
         String path = req.getRequestURI();
         String message;
+        ex.printStackTrace();
         switch (path) {
             case "/webhook":
                 message = "Erro ao controlar fluxo do estacionamento";
