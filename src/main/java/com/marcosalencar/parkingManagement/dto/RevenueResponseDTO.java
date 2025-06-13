@@ -1,5 +1,8 @@
 package com.marcosalencar.parkingManagement.dto;
 
-public record RevenueResponseDTO() {
+import java.time.LocalDateTime;
 
+public record RevenueResponseDTO(Double amount,
+                                 String currency,
+                                 LocalDateTime timestamp) {
 }

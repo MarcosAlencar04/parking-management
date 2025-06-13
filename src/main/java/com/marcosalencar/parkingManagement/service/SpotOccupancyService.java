@@ -1,6 +1,7 @@
 package com.marcosalencar.parkingManagement.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,10 @@ public class SpotOccupancyService {
     private PricingService pricingService;
 
     private enum EventType {ENTRY, PARKED, EXIT};
+
+    public List<SpotOccupancy> getBySectorAndDateRange(Character sector, LocalDateTime start, LocalDateTime end){
+        return spotOccupancyRespository.findBySpot_Sector_SectorAndEntryTimeBetweenAndExitTimeNotNull(sector, start, end);
+    }
 
     public SpotOccupancy getBySpot(Long idSpot){
         return spotOccupancyRespository.findBySpot_IdSpotAndExitTimeNull(idSpot);
