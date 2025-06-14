@@ -2,7 +2,6 @@ package com.marcosalencar.parkingManagement.exception;
 
 import java.util.Map;
 
-import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -32,7 +31,6 @@ public class ApiExceptionHandler {
     public ResponseEntity<Map<String,Object>> handleGeneric(Exception ex, HttpServletRequest req) {
         String path = req.getRequestURI();
         String message;
-        ex.printStackTrace();
         switch (path) {
             case "/webhook":
                 message = "Erro ao controlar fluxo do estacionamento";
