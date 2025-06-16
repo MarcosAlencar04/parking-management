@@ -95,7 +95,7 @@ public class SpotOccupancyService {
         spot.setOccupied(false);
         lastOccupancy.setSpot(spot);
         spotOccupancyRespository.save(lastOccupancy);
-        return "Baixa dada do veículo no estacionamento";
+        return "Veículo saiu do estacionamento, valor total: " + finalPrice;
     }
 
     public String fluxControl(SpotOccupancyRequestDTO dto) {
