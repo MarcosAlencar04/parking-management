@@ -77,6 +77,10 @@ http://localhost:3003/swagger-ui/index.html
 
 - Permite validar lotação e calcular desconto/preço por hora imediatamente, evitando situações de vaga indisponível ou setor cheio apenas no evento de PARKED.
 
+**Observação em relação ao endpoint '/revenue'
+
+- No requisito o endpoint foi especificado como um GET, porém pelo fato de receber um json durante sua requisição, foi entendido que seria melhor (por boas práticas) utilizar um método POST já que ele possui um corpo enviado junto a requisição.
+
 ---
 
 **Desenvolvido por Marcos Alencar**
