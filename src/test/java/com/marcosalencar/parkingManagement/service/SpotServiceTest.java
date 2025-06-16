@@ -61,7 +61,7 @@ public class SpotServiceTest {
 
         assertEquals(true, response.occupied());
         assertEquals("ZUL0001", response.license_plate());
-        assertEquals(20.0, response.price_until_now(), 0.01);
+        assertEquals(20.0, response.priceUntilNow(), 0.01);
     }
 
     @Test
@@ -74,7 +74,7 @@ public class SpotServiceTest {
 
         assertEquals(false, response.occupied());
         assertEquals("", response.license_plate());
-        assertEquals(0, response.price_until_now(), 0.01);
+        assertEquals(0, response.priceUntilNow(), 0.01);
     }
 
 }

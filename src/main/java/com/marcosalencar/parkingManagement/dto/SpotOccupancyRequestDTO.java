@@ -3,10 +3,12 @@ package com.marcosalencar.parkingManagement.dto;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public record SpotOccupancyRequestDTO(String license_plate,
-                                      LocalDateTime entry_time,
-                                      String event_type,
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public record SpotOccupancyRequestDTO(@JsonProperty("license_plate") String licensePlate,
+                                      @JsonProperty("entry_time") LocalDateTime entryTime,
+                                      @JsonProperty("event_type") String eventType,
                                       BigDecimal lat,
                                       BigDecimal lng,
-                                      LocalDateTime exit_time) {
+                                      @JsonProperty("exit_time") LocalDateTime exitTime) {
 }

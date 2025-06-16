@@ -40,22 +40,22 @@ public class SpotOccupancyService {
     }
 
     private String manageEntry(SpotOccupancyRequestDTO dto) {
-        Optional<SpotOccupancy> plateParked = spotOccupancyRespository.findByLicensePlateAndExitTimeNull(dto.license_plate());
+        Optional<SpotOccupancy> plateParked = spotOccupancyRespository.findByLicensePlateAndExitTimeNull(dto.licensePlate());
 
         if(plateParked.isPresent())
             throw new BadRequestException("Já existe um carro estacionado com a placa: " + plateParked.get().getLicensePlate());
 
         SpotOccupancy spotOccupancy = new SpotOccupancy();
-        spotOccupancy.setLicensePlate(dto.license_plate());
-        spotOccupancy.setEntryTime(dto.entry_time());
+        spotOccupancy.setLicensePlate(dto.licensePlate());
+        spotOccupancy.setEntryTime(dto.entryTime());
         spotOccupancyRespository.save(spotOccupancy);
         return "Carro com a placa: " + spotOccupancy.getLicensePlate() + " entrou na garagem";
     }
 
     private String manageParked(SpotOccupancyRequestDTO dto) {
         SpotOccupancy lastOccupancy = spotOccupancyRespository.findTopByLicensePlateAndExitTimeIsNullOrderByIdOccupancyDesc(
-                                                            dto.license_plate()).orElseThrow(() ->
-                                                            new EntityNotFoundException("Veículo da placa " + dto.license_plate() + " não entrou no estacionamento")
+                                                            dto.licensePlate()).orElseThrow(() ->
+                                                            new EntityNotFoundException("Veículo da placa " + dto.licensePlate() + " não entrou no estacionamento")
                                                             );
 
         Spot spot = spotService.getSpotByLatAndLng(dto.lat(), dto.lng());
@@ -80,15 +80,14 @@ public class SpotOccupancyService {
 
     private String manageExit(SpotOccupancyRequestDTO dto) {
         SpotOccupancy lastOccupancy = spotOccupancyRespository.findTopByLicensePlateAndExitTimeIsNullOrderByIdOccupancyDesc(
-                                                            dto.license_plate()).orElseThrow(() ->
-                                                            new EntityNotFoundException("Veículo da placa " + dto.license_plate() + " não entrou no estacionamento")
+                                                            dto.licensePlate()).orElseThrow(() ->
+                                                            new EntityNotFoundException("Veículo da placa " + dto.licensePlate() + " não entrou no estacionamento")
                                                             );
         
         Spot spot = lastOccupancy.getSpot();
         Sector sector = spot.getSector();
 
-        lastOccupancy.setExitTime(dto.exit_time());
-        // double finalPrice = calcCurrentPrice(lastOccupancy.getPricePerHour(), lastOccupancy.getEntryTime(), lastOccupancy.getExitTime());
+        lastOccupancy.setExitTime(dto.exitTime());
         double finalPrice = pricingService.calcCurrentPrice(lastOccupancy.getPricePerHour(), lastOccupancy.getEntryTime(), lastOccupancy.getExitTime());
         lastOccupancy.setFinalPrice(finalPrice);
         sector.setCurrentOccupancy(sector.getCurrentOccupancy()-1);
@@ -100,7 +99,7 @@ public class SpotOccupancyService {
     }
 
     public String fluxControl(SpotOccupancyRequestDTO dto) {
-        String event = dto.event_type();
+        String event = dto.eventType();
         if(event.equals(EventType.ENTRY.toString())){
             return manageEntry(dto);
         } else if(event.equals(EventType.PARKED.toString())) {

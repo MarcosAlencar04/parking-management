@@ -1,5 +1,7 @@
 package com.marcosalencar.parkingManagement.dto;
 
-public record PlateStatusRequestDTO(String license_plate) {
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public record PlateStatusRequestDTO(@JsonProperty("license_plate") String licensePlate) {
 
 }

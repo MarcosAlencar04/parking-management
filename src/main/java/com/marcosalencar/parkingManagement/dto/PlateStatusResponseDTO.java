@@ -3,12 +3,13 @@ package com.marcosalencar.parkingManagement.dto;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.marcosalencar.parkingManagement.entity.SpotOccupancy;
 
-public record PlateStatusResponseDTO(String license_plate,
-                                     Double price_until_now,
-                                     LocalDateTime entry_time,
-                                     LocalDateTime time_parked,
+public record PlateStatusResponseDTO(@JsonProperty("license_plate") String licensePlate,
+                                     @JsonProperty("price_until_now") Double priceUntilNow,
+                                     @JsonProperty("entry_time") LocalDateTime entryTime,
+                                     @JsonProperty("time_parked") LocalDateTime timeParked,
                                      BigDecimal lat,
                                      BigDecimal lng) {
     

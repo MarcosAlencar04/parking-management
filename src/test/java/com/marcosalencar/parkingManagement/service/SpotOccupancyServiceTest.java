@@ -199,8 +199,8 @@ public class SpotOccupancyServiceTest {
 
         PlateStatusResponseDTO response = spotOccupancyService.plateStatus(licensePlate);
 
-        assertEquals(licensePlate, response.license_plate());
-        assertEquals(expectedPrice, response.price_until_now(), 0.01);
+        assertEquals(licensePlate, response.licensePlate());
+        assertEquals(expectedPrice, response.priceUntilNow(), 0.01);
     }
 
     @Test

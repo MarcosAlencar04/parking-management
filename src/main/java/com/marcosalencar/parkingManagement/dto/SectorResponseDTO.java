@@ -2,14 +2,15 @@ package com.marcosalencar.parkingManagement.dto;
 
 import java.time.format.DateTimeFormatter;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.marcosalencar.parkingManagement.entity.Sector;
 
 public record SectorResponseDTO(Character sector,
-                                Double base_price,
-                                Integer max_capacity,
-                                String open_hour,
-                                String close_hour,
-                                Integer duration_limit_minutes) {
+                                @JsonProperty("base_price") Double basePrice,
+                                @JsonProperty("max_capacity") Integer maxCapacity,
+                                @JsonProperty("open_hour") String openHour,
+                                @JsonProperty("close_hour") String closeHour,
+                                @JsonProperty("duration_limit_minutes") Integer durationLimitMinutes) {
 
     
     public SectorResponseDTO(Sector sector){

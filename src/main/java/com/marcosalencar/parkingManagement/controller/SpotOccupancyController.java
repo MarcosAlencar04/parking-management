@@ -31,7 +31,7 @@ public class SpotOccupancyController {
 
     @PostMapping("/plate-status")
     public PlateStatusResponseDTO plateStatus(@RequestBody PlateStatusRequestDTO dto) {
-        PlateStatusResponseDTO response = spotOccupancyService.plateStatus(dto.license_plate());
+        PlateStatusResponseDTO response = spotOccupancyService.plateStatus(dto.licensePlate());
         return response;
     }
     
